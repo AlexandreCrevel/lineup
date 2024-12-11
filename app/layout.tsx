@@ -3,7 +3,6 @@ import {
   SignInButton,
   SignedIn,
   SignedOut,
-  UserProfile,
 } from '@clerk/nextjs';
 import './globals.css';
 export default function RootLayout({
@@ -19,11 +18,7 @@ export default function RootLayout({
             <h2>Disconnected</h2>
             <SignInButton />
           </SignedOut>
-          <SignedIn>
-            <UserProfile />
-            <h2>Connected</h2>
-            {children}
-          </SignedIn>
+          <SignedIn>{children}</SignedIn>
         </body>
       </html>
     </ClerkProvider>
