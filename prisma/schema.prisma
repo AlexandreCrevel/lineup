@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  clerkId   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lineup {
+  id          Int       @id @default(autoincrement())
+  title       String
+  subtitle    String?
+  locale      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+  days        Day[]
+}
+
+model Day {
+  id         Int      @id @default(autoincrement())
+  lineupId   Int
+  lineup     Lineup   @relation(fields: [lineupId], references: [id])
+  title      String
+  titleSmall String?
+  locale     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  artists    Artist[]
+}
+
+model Stage {
+  id          Int       @id @default(autoincrement())
+  title       String
+  threeLogos  Boolean?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+  artists     Artist[]
+}
+
+model Artist {
+  id              Int       @id @default(autoincrement())
+  dayId           Int
+  day             Day       @relation(fields: [dayId], references: [id])
+  stageId         Int?
+  stage           Stage?    @relation(fields: [stageId], references: [id])
+  title           String
+  audio_embed     String?
+  video_embed     String?
+  content         String?
+  slug            String?
+  genres          Genre[]
+  time_start      DateTime?
+  time_end        DateTime?
+  order           Int?
+  locale          String?
+  country         String?
+  socialFacebook  String?
+  socialInstagram String?
+  imageId         Int?
+  image           Media?    @relation("ArtistImage", fields: [imageId], references: [id])
+  logoId          Int?
+  logo            Media?    @relation("ArtistLogo", fields: [logoId], references: [id])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  publishedAt     DateTime?
+}
+
+model Media {
+  id              Int      @id @default(autoincrement())
+  name            String
+  alternativeText String?
+  caption         String?
+  width           Int?
+  height          Int?
+  url             String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  artistImage     Artist[] @relation("ArtistImage")
+  artistLogo      Artist[] @relation("ArtistLogo")
+}
+
+model Genre {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  artists Artist[]
+}
