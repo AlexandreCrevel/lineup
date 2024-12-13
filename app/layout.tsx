@@ -1,3 +1,6 @@
+import { AppSidebar } from '@/components/Sidebar/app-sidebar';
+import Topbar from '@/components/Topbar/Topbar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import {
   ClerkProvider,
   SignInButton,
@@ -14,11 +17,19 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang='en'>
         <body>
-          <SignedOut>
-            <h2>Disconnected</h2>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>{children}</SignedIn>
+          <SidebarProvider>
+            <SignedOut>
+              <h2>Disconnected</h2>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <div className='flex flex-col w-full'>
+                <AppSidebar />
+                <Topbar />
+                {children}
+              </div>
+            </SignedIn>
+          </SidebarProvider>
         </body>
       </html>
     </ClerkProvider>
